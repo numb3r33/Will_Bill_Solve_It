@@ -24,30 +24,32 @@ class FeatureTransformer(BaseEstimator):
 		return self
 
 	def fit_transform(self, X, y=None):
-		accuracy_as_feature = self.get_accuracy(X)
-
+		# accuracy score for the problem
+		# number of problems solved by the user
+		
+		numeric_features = self.get_features(X)
+		
 		features = []
 
-		features.append(accuracy_as_feature)
+		features.append(numeric_features)
 		features = np.hstack(features)
 
 		return np.array(features)
 
-	def get_accuracy(self, X):
-		"""
-		Returns a accuracy associated with a problem
-		"""
+	def get_features(self, X):
 		accuracy = X.accuracy
+		solved_count = X.solved_count_y
+		error_count = X.error_count
+		attempts = X.attempts
 
-		return accuracy.reshape(-1, 1)
+		return np.array([accuracy, solved_count, error_count, attempts]).T
 
 	def transform(self, X):
-		accuracy_as_feature = self.get_accuracy(X)
-
+		numeric_features = self.get_features(X)
+		
 		features = []
 
-		features.append(accuracy_as_feature)
+		features.append(numeric_features)
 		features = np.hstack(features)
-		
+
 		return np.array(features)
-		
