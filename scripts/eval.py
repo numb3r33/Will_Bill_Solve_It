@@ -6,7 +6,7 @@ from collections import Counter
 
 def eval_models(models, X, y):
 
-	cv = StratifiedShuffleSplit(y, n_iter=5, test_size=0.2, indices=True)
+	cv = StratifiedShuffleSplit(y, n_iter=5, test_size=0.3)
 	scores = []
 
 	for train, test in cv:
