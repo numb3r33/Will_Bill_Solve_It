@@ -20,7 +20,7 @@ def build_logistic_regression_model(X, X_test):
 
 def build_random_forest_classifier(X, X_test):
 	ft = FeatureTransformer(X, X_test)
-	clf = RandomForestClassifier(n_estimators=100, n_jobs=-1)
+	clf = RandomForestClassifier(n_estimators=500, n_jobs=-1)
 
 	pipeline = Pipeline([('ft', ft), ('clf', clf)])
 
@@ -38,7 +38,7 @@ def build_sgd_classifier(X, X_test):
 
 def build_extreme_gradient_boosting(X, X_test):
 	ft = FeatureTransformer(X, X_test)
-	clf = xgb.XGBClassifier()
+	clf = xgb.XGBClassifier(n_estimators=500, max_depth=6)
 
 	pipeline = Pipeline([('ft', ft), ('clf', clf)])
 

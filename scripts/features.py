@@ -20,6 +20,7 @@ class FeatureTransformer(BaseEstimator):
 			                  'num_problems_solved', 'num_problems_solved_incorrectly',
 			                  'user_id', 'problem_id'])
 		feature_names.extend(self.categorical_features_columns)
+		feature_names.extend(self.skill_features)
 
 		return np.array(feature_names)
 
@@ -34,6 +35,7 @@ class FeatureTransformer(BaseEstimator):
 		
 		numeric_features = self.get_features(X)
 		categorical_features = self.get_categorical_features(X)
+		skill_features = self.get_skills(X)
 
 		features = []
 
@@ -56,6 +58,19 @@ class FeatureTransformer(BaseEstimator):
 			             user_id, problem_id
 			            ]).T
 
+	def get_skills(self, X):
+		"""
+		Return features regarding skill set of the user
+		"""
+
+		self.skill_features = ['Befunge', 'C', 'C#', 'C++', 'C++ (g++ 4.8.1)',
+                          'Clojure', 'Go', 'Haskell', 'Java', 'Java (openjdk 1.7.0_09)',
+                          'JavaScript', 'JavaScript(Node.js)', 'JavaScript(Rhino)', 'Lisp',
+                          'Objective-C', 'PHP', 'Pascal', 'Perl', 'Python', 'Python 3',
+                          'R(RScript)', 'Ruby', 'Rust', 'Scala', 'Text', 'Whenever']
+
+		return np.array(X[self.skill_features]).T
+
 	def get_categorical_features(self, X):
 		self.categorical_features_columns = ['level', 'user_type', 'tag1']
 		categorical_features = []
@@ -73,6 +88,7 @@ class FeatureTransformer(BaseEstimator):
 	def transform(self, X):
 		numeric_features = self.get_features(X)
 		categorical_features = self.get_categorical_features(X)
+		skill_features = self.get_skills(X)
 		
 		features = []
 
