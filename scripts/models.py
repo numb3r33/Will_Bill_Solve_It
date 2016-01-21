@@ -11,7 +11,7 @@ from features import FeatureTransformer
 def build_logistic_regression_model(X, X_test):
 	ft = FeatureTransformer(X, X_test)
 	scaler = StandardScaler()
-	clf = LogisticRegression(C=5)
+	clf = LogisticRegression(C=.1, class_weight='auto')
 
 
 	pipeline = Pipeline([('ft', ft), ('scaler', scaler), ('clf', clf)])
@@ -20,7 +20,7 @@ def build_logistic_regression_model(X, X_test):
 
 def build_random_forest_classifier(X, X_test):
 	ft = FeatureTransformer(X, X_test)
-	clf = RandomForestClassifier(n_estimators=500, n_jobs=-1)
+	clf = RandomForestClassifier(n_estimators=750, n_jobs=-1)
 
 	pipeline = Pipeline([('ft', ft), ('clf', clf)])
 
@@ -38,7 +38,7 @@ def build_sgd_classifier(X, X_test):
 
 def build_extreme_gradient_boosting(X, X_test):
 	ft = FeatureTransformer(X, X_test)
-	clf = xgb.XGBClassifier(n_estimators=500, max_depth=6)
+	clf = xgb.XGBClassifier(n_estimators=1000, learning_rate=0.01, max_depth=6, min_child_weight=2, subsample=0.8, colsample_bytree=0.6)
 
 	pipeline = Pipeline([('ft', ft), ('clf', clf)])
 
