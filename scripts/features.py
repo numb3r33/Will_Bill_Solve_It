@@ -39,12 +39,13 @@ class FeatureTransformer(BaseEstimator):
 		
 		numeric_features = self.get_features(X)
 		# categorical_features = self.get_categorical_features(X)
-		# skill_features = self.get_skills(X)
+		skill_features = self.get_skills(X)
 
 		features = []
 
 		features.append(numeric_features)
 		# features.append(categorical_features)
+		features.append(skill_features)
 		features = np.hstack(features)
 
 		return np.array(features)
@@ -79,13 +80,9 @@ class FeatureTransformer(BaseEstimator):
 		Return features regarding skill set of the user
 		"""
 
-		self.skill_features = ['Befunge', 'C', 'C#', 'C++', 'C++ (g++ 4.8.1)',
-                          'Clojure', 'Go', 'Haskell', 'Java', 'Java (openjdk 1.7.0_09)',
-                          'JavaScript', 'JavaScript(Node.js)', 'JavaScript(Rhino)', 'Lisp',
-                          'Objective-C', 'PHP', 'Pascal', 'Perl', 'Python', 'Python 3',
-                          'R(RScript)', 'Ruby', 'Rust', 'Scala', 'Text', 'Whenever']
+		self.skill_features = X.columns[17:]
 
-		return np.array(X[self.skill_features]).T
+		return np.array(X[self.skill_features])
 
 	def get_categorical_features(self, X):
 		self.categorical_features_columns = ['level', 'user_type', 'tag1', 'tag2', 'tag3', 'tag4', 'tag5']
@@ -104,12 +101,12 @@ class FeatureTransformer(BaseEstimator):
 	def transform(self, X):
 		numeric_features = self.get_features(X)
 		# categorical_features = self.get_categorical_features(X)
-		# skill_features = self.get_skills(X)
+		skill_features = self.get_skills(X)
 		
 		features = []
 
 		features.append(numeric_features)
-		# features.append(categorical_features)
+		features.append(skill_features)
 
 		features = np.hstack(features)
 
