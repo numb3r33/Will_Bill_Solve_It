@@ -37,7 +37,7 @@ def analyze_output(X):
     y = X.solved_status
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=44)
-    model = models.build_extreme_gradient_boosting(X_train, X_test)
+    model = models.build_logistic_regression_model(X_train, X_test)
 
     model.fit(X_train, y_train)
 
@@ -46,6 +46,8 @@ def analyze_output(X):
 
     print 'Accuracy on the training set %f ' %(accuracy_score(y_train, predsTrain))
     print 'Accuracy on the test set %f ' %(accuracy_score(y_test, predsTest))
+
+    return (predsTrain, predsTest, y_train, y_test)
 
 
 def majority_voting(preds):

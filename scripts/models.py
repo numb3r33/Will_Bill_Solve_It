@@ -2,7 +2,8 @@ from sklearn.linear_model import LogisticRegression, SGDClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
+from sklearn.neighbors import KNeighborsClassifier
 
 import xgboost as xgb
 
@@ -11,7 +12,7 @@ from features import FeatureTransformer
 def build_logistic_regression_model(X, X_test):
 	ft = FeatureTransformer(X, X_test)
 	scaler = StandardScaler()
-	clf = LogisticRegression(C=.1, class_weight='auto')
+	clf = LogisticRegression(C=1.)
 
 
 	pipeline = Pipeline([('ft', ft), ('scaler', scaler), ('clf', clf)])
@@ -20,7 +21,23 @@ def build_logistic_regression_model(X, X_test):
 
 def build_random_forest_classifier(X, X_test):
 	ft = FeatureTransformer(X, X_test)
-	clf = RandomForestClassifier(n_estimators=750, n_jobs=-1)
+	clf = RandomForestClassifier(n_estimators=350, criterion='gini', n_jobs=-1)
+
+	pipeline = Pipeline([('ft', ft), ('clf', clf)])
+
+	return pipeline
+
+def build_extra_trees_classifier(X, X_test):
+	ft = FeatureTransformer(X, X_test)
+	clf = ExtraTreesClassifier(n_estimators=100)
+
+	pipeline = Pipeline([('ft', ft), ('clf', clf)])
+
+	return pipeline
+
+def build_knn_classifier(X, X_test):
+	ft = FeatureTransformer(X, X_test)
+	clf = KNeighborsClassifier(n_neighbors=5, weights='distance')
 
 	pipeline = Pipeline([('ft', ft), ('clf', clf)])
 
@@ -38,7 +55,7 @@ def build_sgd_classifier(X, X_test):
 
 def build_extreme_gradient_boosting(X, X_test):
 	ft = FeatureTransformer(X, X_test)
-	clf = xgb.XGBClassifier(n_estimators=1000, learning_rate=0.01, max_depth=6, min_child_weight=2, subsample=0.8, colsample_bytree=0.6)
+	clf = xgb.XGBClassifier(n_estimators=700, learning_rate=0.08, max_depth=10, min_child_weight=2, subsample=0.8, colsample_bytree=0.7)
 
 	pipeline = Pipeline([('ft', ft), ('clf', clf)])
 

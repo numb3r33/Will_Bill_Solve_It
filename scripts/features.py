@@ -16,11 +16,15 @@ class FeatureTransformer(BaseEstimator):
 		"""
 		feature_names = []
 
-		feature_names.extend(['accuracy', 'per_people_solved',
-			                  'num_problems_solved', 'num_problems_solved_incorrectly',
+		# feature_names.extend(['accuracy', 'per_people_solved',
+			                  # 'num_problems_solved', 'num_problems_solved_incorrectly',
+			                  # 'user_id', 'problem_id'])
+		# feature_names.extend(self.categorical_features_columns)
+		# feature_names.extend(self.skill_features)
+		feature_names.extend(['accuracy', 'solved_count_y', 'attempts',
+			                  'user_capability_ratio', 'solved_count_x',
+			                  'error_count', 'problem_difficulty_ratio',
 			                  'user_id', 'problem_id'])
-		feature_names.extend(self.categorical_features_columns)
-		feature_names.extend(self.skill_features)
 
 		return np.array(feature_names)
 
@@ -34,29 +38,41 @@ class FeatureTransformer(BaseEstimator):
 		# number of problems solved by the user
 		
 		numeric_features = self.get_features(X)
-		categorical_features = self.get_categorical_features(X)
-		skill_features = self.get_skills(X)
+		# categorical_features = self.get_categorical_features(X)
+		# skill_features = self.get_skills(X)
 
 		features = []
 
 		features.append(numeric_features)
-		features.append(categorical_features)
+		# features.append(categorical_features)
 		features = np.hstack(features)
 
 		return np.array(features)
 
 	def get_features(self, X):
-		accuracy = X.accuracy # accuracy score for the problem
-		per_people_solved = X.solved_count_y * 1. / (X.solved_count_y + X.error_count) # percentage of people who solved it correctly
-		num_problems_solved = X.solved_count_x
-		num_problems_solved_incorrectly = X.attempts
+		# accuracy score for the problem
+		accuracy = X.accuracy
+
+		num_problems_solved = X.solved_count_y
+		num_incorrect_submissions = X.attempts
+
+		user_capability_ratio = num_problems_solved / (num_problems_solved + num_incorrect_submissions) * 1.
+
+		num_times_solved_correctly = X.solved_count_x
+		num_times_solved_incorrectly = X.error_count
+
+		problem_difficulty_ratio = num_times_solved_correctly / (num_times_solved_correctly + num_times_solved_incorrectly) * 1.
+		
 		user_id = X.user_id
 		problem_id = X.problem_id
 		
-		return np.array([accuracy, per_people_solved, 
-			             num_problems_solved, num_problems_solved_incorrectly,
-			             user_id, problem_id
-			            ]).T
+		return np.array([accuracy, num_problems_solved,
+						 num_times_solved_correctly,
+						 num_times_solved_incorrectly,
+						 user_capability_ratio,
+						 problem_difficulty_ratio,
+						 user_id,
+						 problem_id]).T
 
 	def get_skills(self, X):
 		"""
@@ -72,7 +88,7 @@ class FeatureTransformer(BaseEstimator):
 		return np.array(X[self.skill_features]).T
 
 	def get_categorical_features(self, X):
-		self.categorical_features_columns = ['level', 'user_type', 'tag1']
+		self.categorical_features_columns = ['level', 'user_type', 'tag1', 'tag2', 'tag3', 'tag4', 'tag5']
 		categorical_features = []
 
 		for cat in self.categorical_features_columns:
@@ -87,13 +103,13 @@ class FeatureTransformer(BaseEstimator):
 
 	def transform(self, X):
 		numeric_features = self.get_features(X)
-		categorical_features = self.get_categorical_features(X)
-		skill_features = self.get_skills(X)
+		# categorical_features = self.get_categorical_features(X)
+		# skill_features = self.get_skills(X)
 		
 		features = []
 
 		features.append(numeric_features)
-		features.append(categorical_features)
+		# features.append(categorical_features)
 
 		features = np.hstack(features)
 
