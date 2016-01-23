@@ -29,7 +29,7 @@ def build_random_forest_classifier(X, X_test):
 
 def build_extra_trees_classifier(X, X_test):
 	ft = FeatureTransformer(X, X_test)
-	clf = ExtraTreesClassifier(n_estimators=100)
+	clf = ExtraTreesClassifier()
 
 	pipeline = Pipeline([('ft', ft), ('clf', clf)])
 
@@ -55,8 +55,17 @@ def build_sgd_classifier(X, X_test):
 
 def build_extreme_gradient_boosting(X, X_test):
 	ft = FeatureTransformer(X, X_test)
-	clf = xgb.XGBClassifier(n_estimators=500)
+	clf = xgb.XGBClassifier(n_estimators=750, learning_rate=.1, min_child_weight=2, colsample_bytree=0.8)
 
 	pipeline = Pipeline([('ft', ft), ('clf', clf)])
 
 	return pipeline
+
+def build_xgboost_model(X, X_test):
+	ft = FeatureTransformer(X, X_test)
+	clf = xgb.XGBClassifier(n_estimators=1000, learning_rate=0.07, max_depth=5)
+
+	pipeline = Pipeline([('ft', ft), ('clf', clf)])
+
+	return pipeline
+

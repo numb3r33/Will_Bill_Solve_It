@@ -16,15 +16,13 @@ class FeatureTransformer(BaseEstimator):
 		"""
 		feature_names = []
 
-		# feature_names.extend(['accuracy', 'per_people_solved',
-			                  # 'num_problems_solved', 'num_problems_solved_incorrectly',
-			                  # 'user_id', 'problem_id'])
-		# feature_names.extend(self.categorical_features_columns)
-		# feature_names.extend(self.skill_features)
 		feature_names.extend(['accuracy', 'solved_count_y', 'attempts',
 			                  'user_capability_ratio', 'solved_count_x',
 			                  'error_count', 'problem_difficulty_ratio',
 			                  'user_id', 'problem_id'])
+		
+		feature_names.extend(self.skill_features)
+
 
 		return np.array(feature_names)
 
@@ -38,14 +36,17 @@ class FeatureTransformer(BaseEstimator):
 		# number of problems solved by the user
 		
 		numeric_features = self.get_features(X)
-		# categorical_features = self.get_categorical_features(X)
+		categorical_features = self.get_categorical_features(X)
 		skill_features = self.get_skills(X)
+		problem_types = self.get_problem_types(X)
 
 		features = []
 
 		features.append(numeric_features)
-		# features.append(categorical_features)
+		features.append(categorical_features)
 		features.append(skill_features)
+		features.append(problem_types)
+
 		features = np.hstack(features)
 
 		return np.array(features)
@@ -84,8 +85,18 @@ class FeatureTransformer(BaseEstimator):
 
 		return np.array(X[self.skill_features])
 
+	def get_problem_types(self, X):
+		"""
+		Return features regarding problem type
+		"""
+
+		self.problem_types = X.columns[43:]
+
+		return np.array(X[self.problem_types])
+
+
 	def get_categorical_features(self, X):
-		self.categorical_features_columns = ['level', 'user_type', 'tag1', 'tag2', 'tag3', 'tag4', 'tag5']
+		self.categorical_features_columns = ['level']
 		categorical_features = []
 
 		for cat in self.categorical_features_columns:
@@ -100,13 +111,16 @@ class FeatureTransformer(BaseEstimator):
 
 	def transform(self, X):
 		numeric_features = self.get_features(X)
-		# categorical_features = self.get_categorical_features(X)
+		categorical_features = self.get_categorical_features(X)
 		skill_features = self.get_skills(X)
+		problem_types = self.get_problem_types(X)
 		
 		features = []
 
 		features.append(numeric_features)
+		features.append(categorical_features)
 		features.append(skill_features)
+		features.append(problem_types)
 
 		features = np.hstack(features)
 
