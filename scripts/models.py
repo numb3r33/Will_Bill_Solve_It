@@ -1,6 +1,6 @@
-from sklearn.linear_model import LogisticRegression, SGDClassifier
+from sklearn.linear_model import LogisticRegression, SGDClassifier, ElasticNet
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -11,8 +11,17 @@ from features import FeatureTransformer
 
 def build_logistic_regression_model(X, X_test):
 	ft = FeatureTransformer(X, X_test)
-	scaler = StandardScaler()
+	scaler = MinMaxScaler()
 	clf = LogisticRegression(C=1.)
+
+
+	pipeline = Pipeline([('ft', ft), ('scaler', scaler), ('clf', clf)])
+	return pipeline
+
+def build_elastic_net_model(X, X_test):
+	ft = FeatureTransformer(X, X_test)
+	scaler = MinMaxScaler()
+	clf = ElasticNet()
 
 
 	pipeline = Pipeline([('ft', ft), ('scaler', scaler), ('clf', clf)])
@@ -29,7 +38,7 @@ def build_random_forest_classifier(X, X_test):
 
 def build_extra_trees_classifier(X, X_test):
 	ft = FeatureTransformer(X, X_test)
-	clf = ExtraTreesClassifier()
+	clf = ExtraTreesClassifier(n_estimators=100)
 
 	pipeline = Pipeline([('ft', ft), ('clf', clf)])
 
@@ -37,35 +46,27 @@ def build_extra_trees_classifier(X, X_test):
 
 def build_knn_classifier(X, X_test):
 	ft = FeatureTransformer(X, X_test)
-	clf = KNeighborsClassifier(n_neighbors=5, weights='distance')
+	scaler = MinMaxScaler()
+	clf = KNeighborsClassifier(n_neighbors=7, weights='distance')
 
-	pipeline = Pipeline([('ft', ft), ('clf', clf)])
+	pipeline = Pipeline([('ft', ft), ('scaler', scaler), ('clf', clf)])
 
 	return pipeline
 
 
 def build_sgd_classifier(X, X_test):
 	ft = FeatureTransformer(X, X_test)
-	scaler = StandardScaler()
-	clf = SGDClassifier(loss='hinge', penalty='l2')
+	scaler = MinMaxScaler()
+	clf = SGDClassifier(penalty='elasticnet')
 
 	pipeline = Pipeline([('ft', ft), ('scaler', scaler), ('clf', clf)])
 
-	return Pipeline
+	return pipeline
 
 def build_extreme_gradient_boosting(X, X_test):
 	ft = FeatureTransformer(X, X_test)
-	clf = xgb.XGBClassifier(n_estimators=750, learning_rate=.1, min_child_weight=2, colsample_bytree=0.8)
+	clf = xgb.XGBClassifier(n_estimators=500, max_depth=4)
 
 	pipeline = Pipeline([('ft', ft), ('clf', clf)])
 
 	return pipeline
-
-def build_xgboost_model(X, X_test):
-	ft = FeatureTransformer(X, X_test)
-	clf = xgb.XGBClassifier(n_estimators=1000, learning_rate=0.07, max_depth=5)
-
-	pipeline = Pipeline([('ft', ft), ('clf', clf)])
-
-	return pipeline
-

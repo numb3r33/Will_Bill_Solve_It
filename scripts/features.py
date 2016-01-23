@@ -22,6 +22,7 @@ class FeatureTransformer(BaseEstimator):
 			                  'user_id', 'problem_id'])
 		
 		feature_names.extend(self.skill_features)
+		feature_names.extend(self.problem_types)
 
 
 		return np.array(feature_names)
@@ -48,7 +49,7 @@ class FeatureTransformer(BaseEstimator):
 		features.append(problem_types)
 
 		features = np.hstack(features)
-
+		
 		return np.array(features)
 
 	def get_features(self, X):
@@ -81,7 +82,7 @@ class FeatureTransformer(BaseEstimator):
 		Return features regarding skill set of the user
 		"""
 
-		self.skill_features = X.columns[17:]
+		self.skill_features = X.columns[17:41]
 
 		return np.array(X[self.skill_features])
 
