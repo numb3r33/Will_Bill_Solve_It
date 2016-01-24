@@ -30,7 +30,7 @@ def build_elastic_net_model(X, X_test):
 
 def build_random_forest_classifier(X, X_test):
 	ft = FeatureTransformer(X, X_test)
-	clf = RandomForestClassifier(n_estimators=500, criterion='gini', n_jobs=-1)
+	clf = RandomForestClassifier(n_estimators=1000, criterion='gini', n_jobs=-1)
 
 	pipeline = Pipeline([('ft', ft), ('clf', clf)])
 
@@ -65,7 +65,7 @@ def build_sgd_classifier(X, X_test):
 
 def build_extreme_gradient_boosting(X, X_test):
 	ft = FeatureTransformer(X, X_test)
-	clf = xgb.XGBClassifier(n_estimators=500, max_depth=4)
+	clf = xgb.XGBClassifier(n_estimators=1000, learning_rate=0.085, min_child_weight=10, gamma=3, subsample=0.8, colsample_bytree=0.8)
 
 	pipeline = Pipeline([('ft', ft), ('clf', clf)])
 

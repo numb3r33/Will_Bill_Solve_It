@@ -55,6 +55,7 @@ class FeatureTransformer(BaseEstimator):
 	def get_features(self, X):
 		# accuracy score for the problem
 		accuracy = X.accuracy
+		num_attempts_at_problem = X.num_attempts
 
 		num_problems_solved = X.solved_count_y
 		num_incorrect_submissions = X.attempts
@@ -69,7 +70,7 @@ class FeatureTransformer(BaseEstimator):
 		user_id = X.user_id
 		problem_id = X.problem_id
 		
-		return np.array([accuracy, num_problems_solved,
+		return np.array([accuracy, num_attempts_at_problem, num_problems_solved,
 						 num_times_solved_correctly,
 						 num_times_solved_incorrectly,
 						 user_capability_ratio,
@@ -82,7 +83,7 @@ class FeatureTransformer(BaseEstimator):
 		Return features regarding skill set of the user
 		"""
 
-		self.skill_features = X.columns[17:41]
+		self.skill_features = X.columns[18:44]
 
 		return np.array(X[self.skill_features])
 
@@ -91,7 +92,7 @@ class FeatureTransformer(BaseEstimator):
 		Return features regarding problem type
 		"""
 
-		self.problem_types = X.columns[43:]
+		self.problem_types = X.columns[46:]
 
 		return np.array(X[self.problem_types])
 

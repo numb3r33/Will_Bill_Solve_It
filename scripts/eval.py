@@ -37,7 +37,7 @@ def analyze_output(X):
     y = X.solved_status
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=44)
-    model = models.build_logistic_regression_model(X_train, X_test)
+    model = models.build_extreme_gradient_boosting(X_train, X_test)
 
     model.fit(X_train, y_train)
 
