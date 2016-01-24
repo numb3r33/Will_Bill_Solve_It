@@ -1,4 +1,4 @@
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, classification_report
 from sklearn.cross_validation import StratifiedShuffleSplit, train_test_split
 
 import numpy as np
@@ -44,8 +44,8 @@ def analyze_output(X):
     predsTrain = model.predict(X_train)
     predsTest = model.predict(X_test)
 
-    print 'Accuracy on the training set %f ' %(accuracy_score(y_train, predsTrain))
-    print 'Accuracy on the test set %f ' %(accuracy_score(y_test, predsTest))
+    print 'Accuracy on the training set %s \n' %(classification_report(y_train, predsTrain))
+    print 'Accuracy on the test set %s \n' %(classification_report(y_test, predsTest))
 
     return (predsTrain, predsTest, y_train, y_test)
 

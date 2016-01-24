@@ -65,7 +65,7 @@ def build_sgd_classifier(X, X_test):
 
 def build_extreme_gradient_boosting(X, X_test):
 	ft = FeatureTransformer(X, X_test)
-	clf = xgb.XGBClassifier(n_estimators=1000, learning_rate=0.085, min_child_weight=10, gamma=3, subsample=0.8, colsample_bytree=0.8)
+	clf = xgb.XGBClassifier(n_estimators=1000, learning_rate=0.085, min_child_weight=15, gamma=3, subsample=0.8, colsample_bytree=0.8)
 
 	pipeline = Pipeline([('ft', ft), ('clf', clf)])
 
